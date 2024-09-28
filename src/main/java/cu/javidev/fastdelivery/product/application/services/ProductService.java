@@ -4,12 +4,13 @@ import cu.javidev.fastdelivery.product.application.ports.in.ProductServicePort;
 import cu.javidev.fastdelivery.product.application.ports.out.ProductPersistencePort;
 import cu.javidev.fastdelivery.product.domain.exceptions.ProductNotFound;
 import cu.javidev.fastdelivery.product.domain.models.Product;
+import cu.javidev.fastdelivery.commons.UseCase;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
+
+@UseCase
 @RequiredArgsConstructor
 public class ProductService implements ProductServicePort {
 
