@@ -40,7 +40,7 @@ public class ProductController {
     }
 
     @PutMapping("/v1/api/{id}")
-    public ProductResponse updateProduct(@PathVariable Long id, @RequestBody ProductUpdateRequest request) {
+    public ProductResponse updateProduct(@PathVariable Long id,@Valid @RequestBody ProductUpdateRequest request) {
         Product product = service.updateProduct(id, mapper.toProduct(request));
         return mapper.toProductResponse(product);
     }

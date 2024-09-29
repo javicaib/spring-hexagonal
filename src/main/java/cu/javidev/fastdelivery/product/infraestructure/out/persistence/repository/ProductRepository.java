@@ -4,4 +4,5 @@ import cu.javidev.fastdelivery.product.infraestructure.out.persistence.entity.Pr
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProductRepository extends JpaRepository<ProductEntity,Long> {
+    Boolean existsByName(String name);
 }

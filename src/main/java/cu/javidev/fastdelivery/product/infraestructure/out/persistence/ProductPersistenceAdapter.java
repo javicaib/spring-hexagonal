@@ -25,6 +25,11 @@ public class ProductPersistenceAdapter implements ProductPersistencePort {
     }
 
     @Override
+    public Boolean existsByName(String name) {
+        return repository.existsByName(name);
+    }
+
+    @Override
     public List<Product> findAll() {
         return mapper.toProducts(repository.findAll());
     }

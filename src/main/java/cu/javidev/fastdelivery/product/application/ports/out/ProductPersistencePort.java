@@ -10,6 +10,8 @@ public interface ProductPersistencePort {
 
     Optional<Product> findById(Long id);
 
+    Boolean existsByName(String name);
+
     List<Product> findAll();
 
     Product save(Product product);
