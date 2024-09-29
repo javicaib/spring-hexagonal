@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateProductRequest {
+public class ProductUpdateRequest {
     @NotBlank(message = "Field name cannot empty or null")
     String name;
 
