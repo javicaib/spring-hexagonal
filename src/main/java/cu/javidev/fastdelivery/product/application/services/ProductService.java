@@ -46,7 +46,6 @@ public class ProductService implements ProductServicePort {
     @Override
     public void deleteProduct(Long id) {
         Product product = this.findProductById(id);
-
-        repository.delete(product);
+        repository.delete(product.getId());
     }
 }
