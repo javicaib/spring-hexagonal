@@ -5,7 +5,6 @@ import cu.javidev.fastdelivery.product.infraestructure.in.rest.dtos.requests.Pro
 import cu.javidev.fastdelivery.product.infraestructure.in.rest.dtos.requests.ProductUpdateRequest;
 import cu.javidev.fastdelivery.product.infraestructure.in.rest.dtos.response.ProductResponse;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = "spring",unmappedSourcePolicy = ReportingPolicy.IGNORE)
