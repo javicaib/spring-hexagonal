@@ -6,6 +6,7 @@ import cu.javidev.fastdelivery.product.infraestructure.in.rest.dtos.response.Pro
 import cu.javidev.fastdelivery.product.infraestructure.in.rest.mapper.ProductRestMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,5 +23,9 @@ public class ProductController {
     @GetMapping("/v1/api")
     public List<ProductResponse> findAllProducts() {
         return service.findAllProducts().stream().map(mapper::toProductResponse).toList();
+    }
+    @GetMapping("/v1/api/{id}")
+    public ProductResponse findProductById(@PathVariable Long id) {
+        return mapper.toProductResponse(service.findProductById(id));
     }
 }
