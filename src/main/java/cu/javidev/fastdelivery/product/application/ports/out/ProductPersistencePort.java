@@ -1,13 +1,11 @@
 package cu.javidev.fastdelivery.product.application.ports.out;
 
-import cu.javidev.fastdelivery.commons.PersistenceAdapter;
 import cu.javidev.fastdelivery.product.domain.models.Product;
 
 
 import java.util.List;
 import java.util.Optional;
 
-@PersistenceAdapter
 public interface ProductPersistencePort {
 
     Optional<Product> findById(Long id);
@@ -16,5 +14,5 @@ public interface ProductPersistencePort {
 
     Product save(Product product);
 
-    void delete(Product product);
+    void delete(Long id);
 }
