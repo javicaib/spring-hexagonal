@@ -46,6 +46,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/v1/api/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteProduct(@PathVariable Long id) {
         service.deleteProduct(id);
     }
