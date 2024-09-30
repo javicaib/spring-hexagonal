@@ -28,6 +28,7 @@ public class GlobalControllerAdviser {
                 .timestamp(LocalDateTime.now())
                 .build();
     }
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ErrorResponse handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
@@ -38,13 +39,14 @@ public class GlobalControllerAdviser {
                 .message(PRODUCT_INVALID.getMessage())
                 .details(
                         bindingResult.getFieldErrors()
-                        .stream()
-                        .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                        .toList()
+                                .stream()
+                                .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                                .toList()
                 )
                 .timestamp(LocalDateTime.now())
                 .build();
     }
+
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(ProductAlreadyRegistered.class)
     public ErrorResponse handleProductAlreadyRegisteredException(ProductAlreadyRegistered exception) {
@@ -55,14 +57,15 @@ public class GlobalControllerAdviser {
                 .details(List.of(exception.getMessage()))
                 .build();
     }
+
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public ErrorResponse handleGenericExceptions(Exception exception) {
-    return ErrorResponse.builder()
-            .code(GENERIC_ERROR.getCode())
-            .message(GENERIC_ERROR.getMessage())
-            .timestamp(LocalDateTime.now())
-            .details(List.of(exception.getMessage()))
-            .build();
+        return ErrorResponse.builder()
+                .code(GENERIC_ERROR.getCode())
+                .message(GENERIC_ERROR.getMessage())
+                .timestamp(LocalDateTime.now())
+                .details(List.of(exception.getMessage()))
+                .build();
     }
 }
