@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/fake")
 @PreAuthorize("denyAll()")
 public class FakeController {
+
     @GetMapping("/say-hello")
+    @PreAuthorize("hasAnyAuthority('READ')")
     public String sayHello() {
         return "Hello World";
     }
