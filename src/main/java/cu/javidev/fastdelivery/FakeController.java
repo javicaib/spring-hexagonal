@@ -16,4 +16,11 @@ public class FakeController {
     public String sayHello() {
         return "Hello World";
     }
+
+
+
+    @GetMapping("/say-secured")
+    public String sayHello2() {
+        return "Hello Secured";
+    }
 }
