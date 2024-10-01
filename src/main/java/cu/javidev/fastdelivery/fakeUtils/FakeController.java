@@ -1,4 +1,4 @@
-package cu.javidev.fastdelivery;
+package cu.javidev.fastdelivery.fakeUtils;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
