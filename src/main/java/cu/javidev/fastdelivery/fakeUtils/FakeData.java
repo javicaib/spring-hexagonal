@@ -42,8 +42,10 @@ public class FakeData implements InitializingBean {
         ));
 
         // Crear permisos genéricos (solo para ejemplo, en un caso real estos estarían definidos)
-        PermissionEntity readPermission = PermissionEntity.builder().name("READ_PRIVILEGES").build();
-        PermissionEntity writePermission = PermissionEntity.builder().name("WRITE_PRIVILEGES").build();
+        PermissionEntity readPermission = PermissionEntity.builder().name("READ").build();
+        PermissionEntity writePermission = PermissionEntity.builder().name("WRITE").build();
+        PermissionEntity deletePermission = PermissionEntity.builder().name("DELETE").build();
+        PermissionEntity updatePermission = PermissionEntity.builder().name("UPDATE").build();
 
         // Crear roles
         RoleEntity adminRole = RoleEntity.builder()
@@ -51,6 +53,7 @@ public class FakeData implements InitializingBean {
                 .permissions(new HashSet<>() {{
                     add(readPermission);
                     add(writePermission);
+                    add(updatePermission);
                 }})
                 .build();
 
@@ -71,6 +74,8 @@ public class FakeData implements InitializingBean {
                 .permissions(new HashSet<>() {{
                     add(readPermission);
                     add(writePermission);
+                    add(deletePermission);
+                    add(updatePermission);
                 }})
                 .build();
 
