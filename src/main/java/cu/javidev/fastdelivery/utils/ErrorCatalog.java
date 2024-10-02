@@ -11,6 +11,7 @@ public enum ErrorCatalog {
     GENERIC_ERROR("ERROR_GEN_001","A catastrophic error has occurred."),
     PERSISTENCE_DUPLICATED_ENTRY_ERROR("ERROR_PERSISTENCE_001","A duplicated entry has occurred."),
     SECURITY_ERROR_DENY("ERROR_SECURITY_001","Request Denied."),
+    SECURITY_ERROR_USER_NOT_FOUND("ERROR_SECURITY_002","User not found."),
     ;
 
     private final String code;
