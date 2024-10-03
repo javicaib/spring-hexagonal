@@ -22,7 +22,7 @@ public class ProductService implements ProductServicePort {
     @Override
     @Transactional(readOnly = true)
     public Product findProductById(Long id) {
-        return repository.findById(id).orElseThrow(ProductNotFound::new);
+        return productExists(id);
     }
 
     @Override
@@ -45,16 +45,16 @@ public class ProductService implements ProductServicePort {
     @Override
     @Transactional
     public Product updateProduct(Long id, Product updateProduct) {
-        Product product = repository.findById(id).orElseThrow(ProductNotFound::new);
+        Product product = productExists(id);
 
         if (!Objects.equals(product.getName(), updateProduct.getName())) {
-           if(repository.existsByName(updateProduct.getName())) throw new ProductAlreadyExists("Product whit name " + updateProduct.getName() + " already exists");
+            if (repository.existsByName(updateProduct.getName()))
+                throw new ProductAlreadyExists("Product whit name " + updateProduct.getName() + " already exists");
         }
 
         product.setName(updateProduct.getName());
         product.setDescription(updateProduct.getDescription());
         product.setPrice(updateProduct.getPrice());
-        product.setDescription(updateProduct.getDescription());
 
         return repository.save(product);
     }
@@ -62,7 +62,12 @@ public class ProductService implements ProductServicePort {
     @Override
     @Transactional
     public void deleteProduct(Long id) {
-        Product product = repository.findById(id).orElseThrow(ProductNotFound::new);;
-        repository.delete(product.getId());
+        productExists(id);
+        repository.delete(id);
     }
+
+    private Product productExists(Long id) {
+        return repository.findById(id).orElseThrow(ProductNotFound::new);
+    }
+
 }
