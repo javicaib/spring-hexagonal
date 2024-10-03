@@ -8,20 +8,20 @@ import lombok.*;
 import java.math.BigDecimal;
 
 
-@Builder
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-public class ProductCreateRequest {
+public record ProductCreateRequest(
 
-    @NotBlank(message = "Field name cannot empty or null")
-    String name;
+        @NotBlank(message = "Field name cannot be empty or null")
+        String name,
 
-    @NotNull(message = "Field price cannot empty or null")
-    @Min(message = "Price cannot be less than 0",value = 0)
-    BigDecimal price;
+        @NotNull(message = "Field price cannot be empty or null")
+        @Min(value = 0, message = "Price cannot be less than 0")
+        BigDecimal price,
 
-    @NotBlank(message = "Field name description empty or null")
-    String description;
+        @NotBlank(message = "Field description cannot be empty or null")
+        String description
+
+) {
+        public String getProductSummary() {
+                return String.format("Product Name: %s, Price: %s", name, price);
+        }
 }
