@@ -57,7 +57,7 @@ public class GlobalControllerAdviser {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ErrorResponse handleHttpMessageNotReadableExceptionException(HttpMessageNotReadableException exception) {
+    public ErrorResponse handleHttpMessageNotReadableExceptionException() {
 
         return new ErrorResponse(
                 REQUEST_ERROR_MISSING_BODY.getCode(),
