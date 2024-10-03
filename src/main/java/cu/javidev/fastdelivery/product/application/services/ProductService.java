@@ -7,6 +7,7 @@ import cu.javidev.fastdelivery.product.domain.exceptions.ProductNotFound;
 import cu.javidev.fastdelivery.product.domain.models.Product;
 import cu.javidev.fastdelivery.commons.UseCase;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.Objects;
 
 @UseCase
 @RequiredArgsConstructor
+@Slf4j
 public class ProductService implements ProductServicePort {
 
     private final ProductPersistencePort repository;
@@ -63,6 +65,7 @@ public class ProductService implements ProductServicePort {
     @Transactional
     public void deleteProduct(Long id) {
         productExists(id);
+        log.info("Deleting product with id: {}", id);
         repository.delete(id);
     }
 

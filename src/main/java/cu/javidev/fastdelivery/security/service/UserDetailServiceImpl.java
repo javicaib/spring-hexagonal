@@ -3,12 +3,12 @@ package cu.javidev.fastdelivery.security.service;
 import cu.javidev.fastdelivery.security.entity.UserEntity;
 import cu.javidev.fastdelivery.security.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.annotations.Cache;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -28,18 +28,25 @@ public class UserDetailServiceImpl implements UserDetailsService {
 
         UserEntity userEntity = userRepository
                 .findUser(username)
-                .orElseThrow(()->new UsernameNotFoundException("Username whit name "+ username + " not found"));
+                .orElseThrow(() ->
+                        {
+                            log.error("Username {} not found", username);
+                            return new UsernameNotFoundException(String.format("Username with name %s not found", username));
+                        }
+                );
 
-        log.info("UserDetails: {}", userEntity.getUsername());
+        List<SimpleGrantedAuthority> grantedAuthorities =
+                new ArrayList<>(userEntity.getRole()
+                        .getPermissions()
+                        .stream()
+                        .map(
+                                permission -> new SimpleGrantedAuthority(permission.getName())
+                        )
+                        .toList());
 
-        List<SimpleGrantedAuthority> grantedAuthorities = new ArrayList<>();
+        grantedAuthorities.add(new SimpleGrantedAuthority(String.format("ROLE_%s", userEntity.getRole().getRole().name())));
 
-        grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_".concat(userEntity.getRole().getRole().name())));
-
-        userEntity.getRole()
-                .getPermissions()
-                .forEach(permission -> grantedAuthorities.add(new SimpleGrantedAuthority(permission.getName())));
-        UserDetails user = User.builder()
+        return User.builder()
                 .username(userEntity.getUsername())
                 .password(userEntity.getPassword())
                 .authorities(grantedAuthorities)
@@ -48,9 +55,6 @@ public class UserDetailServiceImpl implements UserDetailsService {
                 .credentialsExpired(userEntity.isCredentialsNonExpired())
                 .disabled(!userEntity.isEnabled())
                 .build();
-        log.info(user.toString());
-        log.info(user.getPassword());
-        return user;
     }
 
 
