@@ -44,20 +44,20 @@ public class FakeController {
     @PostMapping("/register")
     @PreAuthorize("permitAll()")
     public String sayHello3(@RequestBody @Valid UserRegisterDTO user) {
-
-        UserEntity registerUser = UserEntity.builder().username(user.getUsername()).password(passwordEncoder.encode(user.getPassword())).isEnabled(true).accountNonExpired(true).accountNonLocked(true).credentialsNonExpired(true).role(roleEntityRepository.findByRole(RoleEnum.DEVELOPER).orElse(null)
-        ).build();
+        user.isPasswordsMatch();
+        UserEntity registerUser = UserEntity.builder().username(user.username()).password(passwordEncoder.encode(user.password_confirm())).isEnabled(true).accountNonExpired(true).accountNonLocked(true).credentialsNonExpired(true).role(roleEntityRepository.findByRole(RoleEnum.DEVELOPER).orElse(null)).build();
 
         userRepository.save(registerUser);
-        log.info(user.getUsername());
-        return user.getUsername();
+        log.info(user.username());
+        return String.format("Created user %s", user.username());
     }
 
     @GetMapping("/check")
-    public Boolean checkPassword(){
+    public Boolean checkPassword() {
         UserEntity jeremias = userRepository.findUser("jeremias").orElse(null);
 
 
+        assert jeremias != null;
         return passwordEncoder.matches("123456", jeremias.getPassword());
     }
 }

@@ -3,8 +3,10 @@ package cu.javidev.fastdelivery.product.infraestructure.in.rest;
 import cu.javidev.fastdelivery.product.domain.exceptions.ProductAlreadyExists;
 import cu.javidev.fastdelivery.product.domain.exceptions.ProductNotFound;
 import cu.javidev.fastdelivery.product.infraestructure.in.rest.dtos.response.ErrorResponse;
+import cu.javidev.fastdelivery.security.exceptions.PasswordsDoNotMatch;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -50,6 +52,27 @@ public class GlobalControllerAdviser {
                 PERSISTENCE_DUPLICATED_ENTRY_ERROR.getMessage(),
                 List.of(exception.getMessage())
 
+        );
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ErrorResponse handleHttpMessageNotReadableExceptionException(HttpMessageNotReadableException exception) {
+
+        return new ErrorResponse(
+                REQUEST_ERROR_MISSING_BODY.getCode(),
+                REQUEST_ERROR_MISSING_BODY.getMessage()
+        );
+    }
+
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(PasswordsDoNotMatch.class)
+    public ErrorResponse handlePasswordsDoNotMatchException() {
+
+        return new ErrorResponse(
+                USER_ERROR_PASSWORD_DO_NOT_MATCH.getCode(),
+                USER_ERROR_PASSWORD_DO_NOT_MATCH.getMessage()
         );
     }
 
