@@ -4,15 +4,23 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Builder
-@Getter
-@Setter
-public class ErrorResponse {
-    String code;
-    String message;
-    List<String> details;
-    LocalDateTime timestamp;
+public record ErrorResponse(
+        String code,
+        String message,
+        List<String> details,
+        Instant timestamp
+) {
+    // Constructor personalizado para asignar el timestamp automáticamente
+    public ErrorResponse(String code, String message, List<String> details) {
+        this(code, message, details, Instant.now());
+    }
+
+    // Constructor personalizado para asignar el timestamp automáticamente y no haga falta detallar la excepcion
+    public ErrorResponse(String code, String message) {
+        this(code, message,null, Instant.now());
+    }
 }
