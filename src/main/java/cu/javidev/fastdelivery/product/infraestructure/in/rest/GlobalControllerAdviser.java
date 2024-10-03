@@ -1,6 +1,6 @@
 package cu.javidev.fastdelivery.product.infraestructure.in.rest;
 
-import cu.javidev.fastdelivery.product.domain.exceptions.ProductAlreadyRegistered;
+import cu.javidev.fastdelivery.product.domain.exceptions.ProductAlreadyExists;
 import cu.javidev.fastdelivery.product.domain.exceptions.ProductNotFound;
 import cu.javidev.fastdelivery.product.infraestructure.in.rest.dtos.response.ErrorResponse;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -48,8 +48,8 @@ public class GlobalControllerAdviser {
     }
 
     @ResponseStatus(HttpStatus.CONFLICT)
-    @ExceptionHandler(ProductAlreadyRegistered.class)
-    public ErrorResponse handleProductAlreadyRegisteredException(ProductAlreadyRegistered exception) {
+    @ExceptionHandler(ProductAlreadyExists.class)
+    public ErrorResponse handleProductAlreadyRegisteredException(ProductAlreadyExists exception) {
         return ErrorResponse.builder()
                 .code(PERSISTENCE_DUPLICATED_ENTRY_ERROR.getCode())
                 .message(PERSISTENCE_DUPLICATED_ENTRY_ERROR.getMessage())
