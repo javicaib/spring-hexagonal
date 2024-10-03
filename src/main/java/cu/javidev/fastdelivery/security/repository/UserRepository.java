@@ -1,6 +1,5 @@
 package cu.javidev.fastdelivery.security.repository;
 
-import cu.javidev.fastdelivery.security.entity.RoleEntity;
 import cu.javidev.fastdelivery.security.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

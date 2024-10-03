@@ -3,7 +3,6 @@ package cu.javidev.fastdelivery.security.service;
 import cu.javidev.fastdelivery.security.entity.UserEntity;
 import cu.javidev.fastdelivery.security.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.annotations.Cache;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
