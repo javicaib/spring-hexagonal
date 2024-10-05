@@ -9,7 +9,9 @@ import cu.javidev.fastdelivery.product.infraestructure.in.rest.dtos.response.Pro
 import cu.javidev.fastdelivery.product.infraestructure.in.rest.mapper.ProductRestMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +20,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/products")
 @RequiredArgsConstructor
+@Slf4j
+@PreAuthorize("permitAll()")
 public class ProductController {
     private final ProductService service;
     private final ProductRestMapper mapper;
@@ -36,18 +40,21 @@ public class ProductController {
     @ResponseStatus(HttpStatus.CREATED)
     public ProductResponse saveProduct(@Valid @RequestBody ProductCreateRequest request) {
         Product product = service.saveProduct(mapper.toProduct(request));
+        log.info("Product save {}", request.getProductSummary());
         return mapper.toProductResponse(product);
     }
 
     @PutMapping("/v1/api/{id}")
-    public ProductResponse updateProduct(@PathVariable Long id,@Valid @RequestBody ProductUpdateRequest request) {
+    public ProductResponse updateProduct(@PathVariable Long id, @Valid @RequestBody ProductUpdateRequest request) {
         Product product = service.updateProduct(id, mapper.toProduct(request));
+        log.info("Product update {}", request.getProductSummary());
         return mapper.toProductResponse(product);
     }
 
     @DeleteMapping("/v1/api/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteProduct(@PathVariable Long id) {
+        log.info("Product delete whit id {}", id);
         service.deleteProduct(id);
     }
 }
