@@ -68,11 +68,11 @@ public class FakeController {
             // Asegúrate de que la carpeta existe
             File uploadDir = new File(UPLOAD_DIR);
             if (!uploadDir.exists()) {
-                uploadDir.mkdirs();  // Crea la carpeta si no existe
+               boolean isCreated = uploadDir.mkdirs();  // Crea la carpeta si no existe
             }
 
             // Nombre de archivo que incluya el id del producto
-            String fileName = file.getOriginalFilename();
+            String fileName = "roberto";
 
             // Ruta donde guardar la imagen
             Path filePath = Paths.get(UPLOAD_DIR + fileName);
@@ -80,7 +80,7 @@ public class FakeController {
             // Guardar el archivo
             Files.write(filePath, file.getBytes());
 
-            return "Imagen subida con éxito: " + filePath.toString();
+            return "Imagen subida con éxito: " + filePath;
         } catch (IOException e) {
             return "Error al subir la imagen: " + e.getMessage();
         }
