@@ -5,8 +5,17 @@ import cu.javidev.fastdelivery.security.entity.RoleEnum;
 import cu.javidev.fastdelivery.security.entity.UserEntity;
 import cu.javidev.fastdelivery.security.repository.UserRepository;
 import cu.javidev.fastdelivery.security.rest.UserRegisterDTO;
+import jakarta.annotation.security.PermitAll;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +26,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 
 @RestController
@@ -27,7 +37,8 @@ public class FakeController {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    private static final String UPLOAD_DIR = "uploads/";
+    @Value("${upload.media.folder}")
+    private  String UPLOAD_DIR;
 
     public FakeController(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleEntityRepository roleEntityRepository) {
         this.userRepository = userRepository;
@@ -62,27 +73,54 @@ public class FakeController {
 
     @PostMapping("/uploadImage")
     @PreAuthorize("permitAll()")
-    public String uploadImage(@RequestParam("image") MultipartFile file) {
+    public void uploadImage(@RequestParam("image") List<MultipartFile> file) {
+        file.forEach(this::saveImage);
+    }
 
+    private void saveImage(MultipartFile file){
+        // Nombre de archivo que incluya el id del producto
+        String fileName = file.getOriginalFilename();
+
+        // Ruta donde guardar la imagen
+        Path filePath = Paths.get(UPLOAD_DIR + fileName);
+
+        // Guardar el archivo
         try {
-            // Asegúrate de que la carpeta existe
-            File uploadDir = new File(UPLOAD_DIR);
-            if (!uploadDir.exists()) {
-               boolean isCreated = uploadDir.mkdirs();  // Crea la carpeta si no existe
+            Files.write(filePath, file.getBytes());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    @PermitAll
+    @GetMapping("/images/{fileName}")
+    public ResponseEntity<Resource> getImage(@PathVariable String fileName, HttpServletRequest request) {
+        try {
+            // Crear la ruta del archivo
+            Path filePath = Paths.get(UPLOAD_DIR).resolve(fileName).normalize();
+            Resource resource = new UrlResource(filePath.toUri());
+
+            // Verificar si el archivo existe y es legible
+            if (!resource.exists() || !resource.isReadable()) {
+                return ResponseEntity.notFound().build();
             }
 
-            // Nombre de archivo que incluya el id del producto
-            String fileName = "roberto";
+            // Determinar el tipo de contenido (MIME type)
+            String contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
 
-            // Ruta donde guardar la imagen
-            Path filePath = Paths.get(UPLOAD_DIR + fileName);
+            // Si no se puede determinar el tipo de contenido, usar un tipo por defecto
+            if (contentType == null) {
+                contentType = "application/octet-stream";
+            }
 
-            // Guardar el archivo
-            Files.write(filePath, file.getBytes());
-
-            return "Imagen subida con éxito: " + filePath;
-        } catch (IOException e) {
-            return "Error al subir la imagen: " + e.getMessage();
+            // Retornar el archivo con el tipo de contenido correcto
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
+                    .body(resource);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
         }
     }
 }
