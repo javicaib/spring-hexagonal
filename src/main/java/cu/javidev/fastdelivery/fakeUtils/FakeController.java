@@ -10,6 +10,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 
 @RestController
@@ -19,6 +26,8 @@ public class FakeController {
     private final RoleEntityRepository roleEntityRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
+    private static final String UPLOAD_DIR = "uploads/";
 
     public FakeController(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleEntityRepository roleEntityRepository) {
         this.userRepository = userRepository;
@@ -51,12 +60,29 @@ public class FakeController {
         return String.format("Created user %s", user.username());
     }
 
-    @GetMapping("/check")
-    public Boolean checkPassword() {
-        UserEntity jeremias = userRepository.findUser("jeremias").orElse(null);
+    @PostMapping("/uploadImage")
+    @PreAuthorize("permitAll()")
+    public String uploadImage(@RequestParam("image") MultipartFile file) {
 
+        try {
+            // Asegúrate de que la carpeta existe
+            File uploadDir = new File(UPLOAD_DIR);
+            if (!uploadDir.exists()) {
+                uploadDir.mkdirs();  // Crea la carpeta si no existe
+            }
 
-        assert jeremias != null;
-        return passwordEncoder.matches("123456", jeremias.getPassword());
+            // Nombre de archivo que incluya el id del producto
+            String fileName = file.getOriginalFilename();
+
+            // Ruta donde guardar la imagen
+            Path filePath = Paths.get(UPLOAD_DIR + fileName);
+
+            // Guardar el archivo
+            Files.write(filePath, file.getBytes());
+
+            return "Imagen subida con éxito: " + filePath.toString();
+        } catch (IOException e) {
+            return "Error al subir la imagen: " + e.getMessage();
+        }
     }
 }
