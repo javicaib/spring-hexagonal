@@ -1,7 +1,7 @@
 package cu.javidev.fastdelivery.product.infraestructure.out.persistence.uploads;
 
 import cu.javidev.fastdelivery.commons.PersistenceAdapter;
-import cu.javidev.fastdelivery.product.application.ports.out.UploadPersistencePort;
+import cu.javidev.fastdelivery.product.application.ports.out.FilePersistencePort;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,7 +13,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @PersistenceAdapter
-public class UploadPersistenceAdapter implements UploadPersistencePort {
+public class UploadPersistenceAdapter implements FilePersistencePort {
 
     @Value("${upload.media.folder}")
     String UPLOAD_DIR;

@@ -3,7 +3,7 @@ package cu.javidev.fastdelivery.product.application.services;
 import cu.javidev.fastdelivery.product.application.ports.in.ProductSaveCommand;
 import cu.javidev.fastdelivery.product.application.ports.in.ProductServicePort;
 import cu.javidev.fastdelivery.product.application.ports.out.ProductPersistencePort;
-import cu.javidev.fastdelivery.product.application.ports.out.UploadPersistencePort;
+import cu.javidev.fastdelivery.product.application.ports.out.FilePersistencePort;
 import cu.javidev.fastdelivery.product.domain.exceptions.ProductAlreadyExists;
 import cu.javidev.fastdelivery.product.domain.exceptions.ProductNotFound;
 import cu.javidev.fastdelivery.product.domain.models.Image;
@@ -25,7 +25,7 @@ import java.util.Objects;
 public class ProductService implements ProductServicePort {
 
     private final ProductPersistencePort repository;
-    private final UploadPersistencePort uploadRepository;
+    private final FilePersistencePort uploadRepository;
 
     @Override
     @Transactional(readOnly = true)
