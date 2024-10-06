@@ -1,12 +1,10 @@
 package cu.javidev.fastdelivery.fakeUtils;
 
-import cu.javidev.fastdelivery.Testing.ProductCreateCommand;
 import cu.javidev.fastdelivery.security.repository.RoleEntityRepository;
 import cu.javidev.fastdelivery.security.entity.RoleEnum;
 import cu.javidev.fastdelivery.security.entity.UserEntity;
 import cu.javidev.fastdelivery.security.repository.UserRepository;
 import cu.javidev.fastdelivery.security.rest.UserRegisterDTO;
-import cu.javidev.fastdelivery.utils.uploads.services.IFileApiService;
 import jakarta.annotation.security.PermitAll;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -20,13 +18,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 
 
 @RestController
@@ -36,15 +30,13 @@ public class FakeController {
     private final RoleEntityRepository roleEntityRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final IFileApiService fileApiService;
     @Value("${upload.media.folder}")
     private  String UPLOAD_DIR;
 
-    public FakeController(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleEntityRepository roleEntityRepository, IFileApiService fileApiService) {
+    public FakeController(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleEntityRepository roleEntityRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleEntityRepository = roleEntityRepository;
-        this.fileApiService = fileApiService;
     }
 
 
@@ -71,27 +63,6 @@ public class FakeController {
         log.info(user.username());
         return String.format("Created user %s", user.username());
     }
-
-    @PostMapping("/uploadImage")
-    @PreAuthorize("permitAll()")
-    public void uploadImage(@RequestParam("image") List<MultipartFile> files) {
-        files.forEach(fileApiService::saveFile);
-    }
-
-    @CrossOrigin(origins = "*")
-    @PostMapping(path = "/products",consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-    @PreAuthorize("permitAll()")
-    public String createProductWhitImages(
-            @RequestPart("images") List<MultipartFile> images,
-            @RequestPart("product") ProductCreateCommand product
-    ) {
-
-            images.forEach(fileApiService::saveFile);
-            log.info(product.toString());
-            return "Hola";
-    }
-
-
 
     @PermitAll
     @GetMapping("/images/{fileName}")

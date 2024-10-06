@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Objects;
 import java.util.UUID;
 
 @PersistenceAdapter
@@ -18,14 +19,13 @@ public class UploadPersistenceAdapter implements UploadPersistencePort {
     String UPLOAD_DIR;
 
     @Override
-    public String saveFileToMediaFolder(MultipartFile file) {
-        String fileName = UUID.randomUUID() + file.getOriginalFilename();
-
+    public String saveFile(MultipartFile file) {
+        String fileName = UUID.randomUUID() + Objects.requireNonNull(file.getOriginalFilename()).substring(file.getOriginalFilename().lastIndexOf("."));
         Path filePath = Paths.get(UPLOAD_DIR + fileName);
 
         try {
             Files.write(filePath, file.getBytes());
-            return filePath.toString().replace("\\", "/");
+            return filePath.getFileName().toString();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

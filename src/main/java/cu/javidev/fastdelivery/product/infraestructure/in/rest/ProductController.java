@@ -1,15 +1,12 @@
 package cu.javidev.fastdelivery.product.infraestructure.in.rest;
 
-import cu.javidev.fastdelivery.Testing.ProductCreateCommand;
 import cu.javidev.fastdelivery.commons.WebAdapter;
-import cu.javidev.fastdelivery.product.application.ports.in.ProductSaveCommand;
 import cu.javidev.fastdelivery.product.application.services.ProductService;
 import cu.javidev.fastdelivery.product.domain.models.Product;
 import cu.javidev.fastdelivery.product.infraestructure.in.rest.dtos.requests.ProductCreateRequest;
 import cu.javidev.fastdelivery.product.infraestructure.in.rest.dtos.requests.ProductUpdateRequest;
 import cu.javidev.fastdelivery.product.infraestructure.in.rest.dtos.response.ProductResponse;
 import cu.javidev.fastdelivery.product.infraestructure.in.rest.mapper.ProductRestMapper;
-import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -65,7 +62,7 @@ public class ProductController {
 
     @CrossOrigin(origins = "*")
     @PostMapping(path = "/v2/api",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ProductResponse createProductWhitImages(@RequestPart("images") List<MultipartFile> files, @RequestPart("product") ProductCreateCommand product) {
+    public ProductResponse createProductWhitImages(@RequestPart("images") List<MultipartFile> files, @RequestPart("product") ProductCreateRequest product) {
         Product responseProduct = service.saveProduct(mapper.toProductSaveCommand(product), files);
         return mapper.toProductResponse(responseProduct);
     }

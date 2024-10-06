@@ -17,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.UUID;
 
 
 @UseCase
@@ -62,7 +61,7 @@ public class ProductService implements ProductServicePort {
         List<Image> images = new ArrayList<>();
 
         files.forEach(file -> {
-            images.add(new Image(uploadRepository.saveFileToMediaFolder(file)));
+            images.add(new Image(uploadRepository.saveFile(file)));
         });
 
         saveProduct.setImages(images);

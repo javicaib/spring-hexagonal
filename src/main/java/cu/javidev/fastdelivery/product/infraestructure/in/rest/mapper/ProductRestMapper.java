@@ -1,6 +1,5 @@
 package cu.javidev.fastdelivery.product.infraestructure.in.rest.mapper;
 
-import cu.javidev.fastdelivery.Testing.ProductCreateCommand;
 import cu.javidev.fastdelivery.product.application.ports.in.ProductSaveCommand;
 import cu.javidev.fastdelivery.product.domain.models.Image;
 import cu.javidev.fastdelivery.product.domain.models.Product;
@@ -25,7 +24,7 @@ public interface ProductRestMapper {
     @Mapping(source = "images", target = "images",qualifiedByName = "mapImagesToPathsDomain")
     ProductResponse toProductResponse(Product product);
 
-    ProductSaveCommand toProductSaveCommand(ProductCreateCommand product);
+    ProductSaveCommand toProductSaveCommand(ProductCreateRequest product);
 
     @Named("mapImagesToPathsDomain")
     default List<String> mapImagesToPathsDomain(List<Image> images) {
