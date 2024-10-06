@@ -9,6 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class ProductResponse {
     Long id;
     String name;
@@ -16,11 +17,8 @@ public class ProductResponse {
     String description;
     List<String> images;
 
-    public ProductResponse(Long id, String name, BigDecimal price, String description, List<String> images) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.description = description;
-        this.images = images.stream().map(image->"/media/"+image).toList();
+    public List<String> getImages() {
+
+        return images.stream().map(image->"/media/"+image).toList();
     }
 }
