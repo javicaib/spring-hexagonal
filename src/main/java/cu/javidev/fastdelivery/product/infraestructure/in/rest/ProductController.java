@@ -7,6 +7,7 @@ import cu.javidev.fastdelivery.product.infraestructure.in.rest.dtos.requests.Pro
 import cu.javidev.fastdelivery.product.infraestructure.in.rest.dtos.requests.ProductUpdateRequest;
 import cu.javidev.fastdelivery.product.infraestructure.in.rest.dtos.response.ProductResponse;
 import cu.javidev.fastdelivery.product.infraestructure.in.rest.mapper.ProductRestMapper;
+import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +24,7 @@ import java.util.List;
 @RequestMapping("/products")
 @RequiredArgsConstructor
 @Slf4j
-@PreAuthorize("permitAll()")
+@PermitAll
 public class ProductController {
     private final ProductService service;
     private final ProductRestMapper mapper;
