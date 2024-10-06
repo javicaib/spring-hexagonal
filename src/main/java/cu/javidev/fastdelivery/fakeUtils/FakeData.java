@@ -2,8 +2,8 @@ package cu.javidev.fastdelivery.fakeUtils;
 
 
 import cu.javidev.fastdelivery.security.repository.UserRepository;
-import cu.javidev.fastdelivery.product.infraestructure.out.persistence.entity.ProductEntity;
-import cu.javidev.fastdelivery.product.infraestructure.out.persistence.repository.ProductRepository;
+import cu.javidev.fastdelivery.product.infraestructure.out.persistence.postgres.entity.ProductEntity;
+import cu.javidev.fastdelivery.product.infraestructure.out.persistence.postgres.repository.ProductRepository;
 import cu.javidev.fastdelivery.security.entity.PermissionEntity;
 import cu.javidev.fastdelivery.security.entity.RoleEntity;
 import cu.javidev.fastdelivery.security.entity.RoleEnum;

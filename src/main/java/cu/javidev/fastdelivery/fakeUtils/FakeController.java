@@ -1,10 +1,12 @@
 package cu.javidev.fastdelivery.fakeUtils;
 
+import cu.javidev.fastdelivery.Testing.ProductCreateCommand;
 import cu.javidev.fastdelivery.security.repository.RoleEntityRepository;
 import cu.javidev.fastdelivery.security.entity.RoleEnum;
 import cu.javidev.fastdelivery.security.entity.UserEntity;
 import cu.javidev.fastdelivery.security.repository.UserRepository;
 import cu.javidev.fastdelivery.security.rest.UserRegisterDTO;
+import cu.javidev.fastdelivery.utils.uploads.services.IFileApiService;
 import jakarta.annotation.security.PermitAll;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -34,14 +36,15 @@ public class FakeController {
     private final RoleEntityRepository roleEntityRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
+    private final IFileApiService fileApiService;
     @Value("${upload.media.folder}")
     private  String UPLOAD_DIR;
 
-    public FakeController(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleEntityRepository roleEntityRepository) {
+    public FakeController(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleEntityRepository roleEntityRepository, IFileApiService fileApiService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleEntityRepository = roleEntityRepository;
+        this.fileApiService = fileApiService;
     }
 
 
@@ -71,24 +74,23 @@ public class FakeController {
 
     @PostMapping("/uploadImage")
     @PreAuthorize("permitAll()")
-    public void uploadImage(@RequestParam("image") List<MultipartFile> file) {
-        file.forEach(this::saveImage);
+    public void uploadImage(@RequestParam("image") List<MultipartFile> files) {
+        files.forEach(fileApiService::saveFile);
     }
 
-    private void saveImage(MultipartFile file){
-        // Nombre de archivo que incluya el id del producto
-        String fileName = file.getOriginalFilename();
+    @CrossOrigin(origins = "*")
+    @PostMapping(path = "/products",consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    @PreAuthorize("permitAll()")
+    public String createProductWhitImages(
+            @RequestPart("images") List<MultipartFile> images,
+            @RequestPart("product") ProductCreateCommand product
+    ) {
 
-        // Ruta donde guardar la imagen
-        Path filePath = Paths.get(UPLOAD_DIR + fileName);
-
-        // Guardar el archivo
-        try {
-            Files.write(filePath, file.getBytes());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+            images.forEach(fileApiService::saveFile);
+            log.info(product.toString());
+            return "Hola";
     }
+
 
 
     @PermitAll

@@ -1,17 +1,19 @@
-package cu.javidev.fastdelivery.product.infraestructure.out.persistence;
+package cu.javidev.fastdelivery.product.infraestructure.out.persistence.postgres;
 
 import cu.javidev.fastdelivery.commons.PersistenceAdapter;
 import cu.javidev.fastdelivery.product.application.ports.out.ProductPersistencePort;
 import cu.javidev.fastdelivery.product.domain.models.Product;
-import cu.javidev.fastdelivery.product.infraestructure.out.persistence.entity.ProductEntity;
-import cu.javidev.fastdelivery.product.infraestructure.out.persistence.mapper.ProductPersistenceMapper;
-import cu.javidev.fastdelivery.product.infraestructure.out.persistence.repository.ProductRepository;
+import cu.javidev.fastdelivery.product.infraestructure.out.persistence.postgres.entity.ProductEntity;
+import cu.javidev.fastdelivery.product.infraestructure.out.persistence.postgres.mapper.ProductPersistenceMapper;
+import cu.javidev.fastdelivery.product.infraestructure.out.persistence.postgres.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @PersistenceAdapter
 @RequiredArgsConstructor
 public class ProductPersistenceAdapter implements ProductPersistencePort {

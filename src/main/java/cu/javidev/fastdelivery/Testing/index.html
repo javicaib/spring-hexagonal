@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subir Producto con Imágenes</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+</head>
+<body>
+
+<h1>Crear Producto con Imágenes</h1>
+
+<!-- Formulario para seleccionar imágenes -->
+<form id="productForm">
+    <label for="name">Nombre del Producto:</label>
+    <input type="text" id="name" required><br><br>
+
+    <label for="price">Precio del Producto:</label>
+    <input type="number" id="price" step="0.01" required><br><br>
+
+    <label for="description">Descripción:</label>
+    <textarea id="description" required></textarea><br><br>
+
+    <label for="imageInput">Seleccionar Imágenes:</label>
+    <input type="file" id="imageInput" multiple required><br><br>
+
+    <button type="button" onclick="createProductWithImages()">Subir Producto</button>
+</form>
+
+<script>
+    async function createProductWithImages() {
+        const formData = new FormData();
+
+        // Crear un objeto para el producto en formato JSON
+        const product = {
+            name: document.querySelector('#name').value,
+            price: parseFloat(document.querySelector('#price').value),
+            description: document.querySelector('#description').value
+        };
+        console.log(product)
+
+        // Agregar el producto al formData como JSON
+        formData.append("product", new Blob([JSON.stringify(product)], { type: "application/json" }));
+
+        // Agregar imágenes al formData (desde el input file)
+        const imageInput = document.querySelector('#imageInput');
+        if (imageInput.files.length > 0) {
+            for (let i = 0; i < imageInput.files.length; i++) {
+                formData.append("images", imageInput.files[i]);
+            }
+        } else {
+            alert("Por favor selecciona al menos una imagen.");
+            return;
+        }
+
+        try {
+            const response = await fetch('http://localhost:4000/products/v2/api', {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (response.ok) {
+                const data = await response.text(); // O response.json() si es JSON
+                alert("Producto creado con éxito: " + data);
+            } else {
+                alert("Error al crear el producto: " + response.statusText);
+            }
+        } catch (error) {
+            console.error("Error en la solicitud:", error);
+            alert("Ocurrió un error en la solicitud.");
+        }
+    }
+</script>
+
+</body>
+</html>

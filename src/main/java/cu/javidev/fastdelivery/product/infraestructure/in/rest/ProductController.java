@@ -1,18 +1,23 @@
 package cu.javidev.fastdelivery.product.infraestructure.in.rest;
 
+import cu.javidev.fastdelivery.Testing.ProductCreateCommand;
 import cu.javidev.fastdelivery.commons.WebAdapter;
+import cu.javidev.fastdelivery.product.application.ports.in.ProductSaveCommand;
 import cu.javidev.fastdelivery.product.application.services.ProductService;
 import cu.javidev.fastdelivery.product.domain.models.Product;
 import cu.javidev.fastdelivery.product.infraestructure.in.rest.dtos.requests.ProductCreateRequest;
 import cu.javidev.fastdelivery.product.infraestructure.in.rest.dtos.requests.ProductUpdateRequest;
 import cu.javidev.fastdelivery.product.infraestructure.in.rest.dtos.response.ProductResponse;
 import cu.javidev.fastdelivery.product.infraestructure.in.rest.mapper.ProductRestMapper;
+import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -56,5 +61,12 @@ public class ProductController {
     public void deleteProduct(@PathVariable Long id) {
         log.info("Product delete whit id {}", id);
         service.deleteProduct(id);
+    }
+
+    @CrossOrigin(origins = "*")
+    @PostMapping(path = "/v2/api",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ProductResponse createProductWhitImages(@RequestPart("images") List<MultipartFile> files, @RequestPart("product") ProductCreateCommand product) {
+        Product responseProduct = service.saveProduct(mapper.toProductSaveCommand(product), files);
+        return mapper.toProductResponse(responseProduct);
     }
 }

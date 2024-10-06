@@ -1,17 +1,23 @@
 package cu.javidev.fastdelivery.product.application.services;
 
+import cu.javidev.fastdelivery.product.application.ports.in.ProductSaveCommand;
 import cu.javidev.fastdelivery.product.application.ports.in.ProductServicePort;
 import cu.javidev.fastdelivery.product.application.ports.out.ProductPersistencePort;
+import cu.javidev.fastdelivery.product.application.ports.out.UploadPersistencePort;
 import cu.javidev.fastdelivery.product.domain.exceptions.ProductAlreadyExists;
 import cu.javidev.fastdelivery.product.domain.exceptions.ProductNotFound;
+import cu.javidev.fastdelivery.product.domain.models.Image;
 import cu.javidev.fastdelivery.product.domain.models.Product;
 import cu.javidev.fastdelivery.commons.UseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 
 @UseCase
@@ -20,6 +26,7 @@ import java.util.Objects;
 public class ProductService implements ProductServicePort {
 
     private final ProductPersistencePort repository;
+    private final UploadPersistencePort uploadRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -42,6 +49,27 @@ public class ProductService implements ProductServicePort {
         }
 
         return repository.save(product);
+    }
+
+    @Override
+    public Product saveProduct(ProductSaveCommand product, List<MultipartFile> files) {
+        Product saveProduct = new Product();
+
+        saveProduct.setDescription(product.description());
+        saveProduct.setName(product.name());
+        saveProduct.setPrice(product.price());
+
+        List<Image> images = new ArrayList<>();
+
+        files.forEach(file -> {
+            images.add(new Image(uploadRepository.saveFileToMediaFolder(file)));
+        });
+
+        saveProduct.setImages(images);
+
+        log.info("Saving product {}", saveProduct);
+
+        return repository.save(saveProduct);
     }
 
     @Override

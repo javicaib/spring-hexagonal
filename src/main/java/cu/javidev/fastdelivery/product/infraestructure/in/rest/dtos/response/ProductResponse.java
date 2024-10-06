@@ -1,8 +1,10 @@
 package cu.javidev.fastdelivery.product.infraestructure.in.rest.dtos.response;
 
+import cu.javidev.fastdelivery.product.domain.models.Image;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Builder
 @Getter
@@ -14,5 +16,5 @@ public class ProductResponse {
     String name;
     BigDecimal price;
     String description;
-
+    List<String> images;
 }
