@@ -60,9 +60,7 @@ public class ProductService implements ProductServicePort {
 
         List<Image> images = new ArrayList<>();
 
-        files.forEach(file -> {
-            images.add(new Image(uploadRepository.saveFile(file)));
-        });
+        files.forEach(file -> images.add(new Image(uploadRepository.saveFile(file))));
 
         saveProduct.setImages(images);
 
